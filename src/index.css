@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+
+    --background: 210 40% 96%;
+
+    --surface: 0 0% 100%;
+
+    --foreground: 222 47% 11%;
+
+    --muted: 215 16% 47%;
+
+    --border: 214 32% 91%;
+
+  }
+
+  .dark {
+
+    --background: 240 10% 3.9%;
+
+    --surface: 240 10% 7%;
+
+    --foreground: 0 0% 98%;
+
+    --muted: 215 20.2% 65.1%;
+
+    --border: 0 0% 100%;
+    --border: 0 0% 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary transition-colors duration-300;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-foreground/10;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-foreground/20;
+}
