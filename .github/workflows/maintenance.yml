@@ -2,7 +2,7 @@ name: Portfolio Maintenance
 
 on:
   schedule:
-    - cron: "0 3 * * 1-5"   # Weekdays only
+    - cron: "30 3 * * 1-5"   # 9:00 AM IST (UTC 3:30)
   workflow_dispatch:
 
 jobs:
@@ -12,18 +12,28 @@ jobs:
       contents: write
 
     steps:
-      - name: Random working-hour delay (IST 9AM–8PM)
+      ##############################################
+      # Random working-hour delay (0–4 hours max)
+      ##############################################
+      - name: Random working-hour delay
         run: |
-          DELAY=$(( (RANDOM % 39600) + 12600 ))
+          DELAY=$(shuf -i 0-14400 -n 1)   # 0–4 hours (14400 sec)
+          echo "Sleeping for $DELAY seconds"
           sleep $DELAY
 
+      ##############################################
+      # Checkout repository
+      ##############################################
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      ##############################################
+      # Random skip (30% chance)
+      ##############################################
       - name: Random skip (30% chance)
         id: skip
         run: |
-          if [ $((RANDOM % 10)) -lt 3 ]; then
+          if [ $(shuf -i 0-9 -n 1) -lt 3 ]; then
             echo "skip=true" >> $GITHUB_OUTPUT
           else
             echo "skip=false" >> $GITHUB_OUTPUT
@@ -31,14 +41,20 @@ jobs:
 
       - name: Stop if skipped
         if: steps.skip.outputs.skip == 'true'
-        run: exit 0
+        run: |
+          echo "Skipping today..."
+          exit 0
 
+      ##############################################
+      # Choose realistic task
+      ##############################################
       - name: Choose realistic task
         id: task
         run: |
           TASKS=("tailwind" "css" "readme" "component" "version")
-          choice=${TASKS[$RANDOM % ${#TASKS[@]}]}
+          choice=$(shuf -e "${TASKS[@]}" -n 1)
           echo "task=$choice" >> $GITHUB_OUTPUT
+          echo "Selected task: $choice"
 
       ##############################################
       # Tailwind refinement
@@ -51,7 +67,7 @@ jobs:
           fi
 
       ##############################################
-      # CSS tweak
+      # CSS refinement
       ##############################################
       - name: CSS refinement
         if: steps.task.outputs.task == 'css'
@@ -75,9 +91,11 @@ jobs:
       - name: Component internal improvement
         if: steps.task.outputs.task == 'component'
         run: |
-          FILE=$(find src/components -name "*.tsx" | head -n 1)
-          if [ -n "$FILE" ]; then
-            echo "// TODO: future optimization $(date +%Y-%m-%d)" >> $FILE
+          if [ -d src/components ]; then
+            FILE=$(find src/components -name "*.tsx" | head -n 1)
+            if [ -n "$FILE" ]; then
+              echo "// TODO: future optimization $(date +%Y-%m-%d)" >> "$FILE"
+            fi
           fi
 
       ##############################################
@@ -91,19 +109,17 @@ jobs:
           fi
 
       ##############################################
-      # Commit message generator
+      # Generate MR commit message
       ##############################################
       - name: Generate MR commit message
         id: commitmsg
         run: |
           LAST=$(git log --pretty=format:"%s" -n 100 | grep -oP '\[MR\] - P\K[0-9]+' | sort -n | tail -1)
-
           if [ -z "$LAST" ]; then
             NEXT=1
           else
             NEXT=$((LAST + 1))
           fi
-
           PADDED=$(printf "%03d" $NEXT)
 
           DESCRIPTIONS=(
@@ -117,14 +133,23 @@ jobs:
             "Configuration refinement"
           )
 
-          DESC=${DESCRIPTIONS[$RANDOM % ${#DESCRIPTIONS[@]}]}
+          DESC=$(shuf -e "${DESCRIPTIONS[@]}" -n 1)
 
           echo "message=[MR] - P$PADDED | $DESC" >> $GITHUB_OUTPUT
 
+      ##############################################
+      # Commit and push (safe)
+      ##############################################
       - name: Commit and push
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
           git add .
-          git commit -m "${{ steps.commitmsg.outputs.message }}" || echo "No changes"
-          git push
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "${{ steps.commitmsg.outputs.message }}"
+            git push
+          fi
