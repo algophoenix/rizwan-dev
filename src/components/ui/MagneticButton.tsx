@@ -36,3 +36,4 @@ export const MagneticButton = ({ children, className, ...props }: MagneticButton
         </motion.button>
     );
 };
+// TODO: future optimization 2026-02-18
