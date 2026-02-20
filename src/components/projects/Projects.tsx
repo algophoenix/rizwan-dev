@@ -84,3 +84,4 @@ export const Projects = () => {
         </Section>
     );
 };
+// TODO: future optimization 2026-02-20
