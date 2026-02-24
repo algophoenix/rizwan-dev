@@ -71,3 +71,5 @@ export default defineConfig([
   },
 ])
 ```
+
+### Minor documentation update - 2026-02-24
