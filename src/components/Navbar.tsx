@@ -110,3 +110,4 @@ export const Navbar = () => {
     );
 };
 // TODO: future optimization 2026-04-27
+// TODO: future optimization 2026-04-30
