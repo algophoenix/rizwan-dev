@@ -102,3 +102,4 @@ export const About = () => {
         </Section>
     );
 };
+// TODO: future optimization 2026-05-19
