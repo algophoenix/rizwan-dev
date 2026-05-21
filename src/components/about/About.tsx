@@ -103,3 +103,4 @@ export const About = () => {
     );
 };
 // TODO: future optimization 2026-05-19
+// TODO: future optimization 2026-05-21
