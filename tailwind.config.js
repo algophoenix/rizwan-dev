@@ -54,3 +54,4 @@ export default {
 // refined spacing scale 2026-04-20
 // refined spacing scale 2026-05-20
 // refined spacing scale 2026-05-26
+// refined spacing scale 2026-06-02
