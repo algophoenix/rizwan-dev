@@ -87,3 +87,4 @@ export const Experience = () => {
         </Section>
     );
 };
+// TODO: future optimization 2026-07-01
