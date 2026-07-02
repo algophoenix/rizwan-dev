@@ -97,3 +97,5 @@ export default defineConfig([
 ### Minor documentation update - 2026-06-11
 
 ### Minor documentation update - 2026-06-26
+
+### Minor documentation update - 2026-07-02
