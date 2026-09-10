@@ -19,3 +19,4 @@ export const Education = () => {
         </Section>
     );
 };
+// TODO: future optimization 2026-09-10
