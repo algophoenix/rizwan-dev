@@ -21,3 +21,4 @@ export const Education = () => {
 };
 // TODO: future optimization 2026-09-10
 // TODO: future optimization 2026-10-06
+// TODO: future optimization 2026-10-19
