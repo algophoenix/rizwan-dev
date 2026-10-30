@@ -106,3 +106,4 @@ export const About = () => {
 // TODO: future optimization 2026-05-21
 // TODO: future optimization 2026-06-10
 // TODO: future optimization 2026-10-29
+// TODO: future optimization 2026-10-30
